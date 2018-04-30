@@ -1,0 +1,26 @@
+s* = solucionInicial()
+s = s*
+iteracionActual = 0
+mejorObjetivo = funcObjetivo(s*)
+while iteracionActual < Max_Iteracion do
+	rec = elegirRecursoAleatorio(s)
+	s^ = s - rec
+	iteracionActual = iteracionActual + 1
+	for vecino in obtenerVecinos(rec) do
+		obj = pruebaFuncObjtVecino(s^, vecino)
+		if (esTabu(vecino) and obj > mejorObjetivo) 
+		or mejorGeneral(s^, vecino) then
+			mejorVecino = vecino
+			mejorObjetivo = obj
+			agregarTabu(vecino)
+		end
+	end
+	if mejorGeneral(s^, mejorVecino) then
+		s* = s^ + mejorVecino
+		iteracionActual = 0
+	end
+	if iteracionActual % |U| == 0 
+	and iteracionActual > 0 then
+		intensificacion()
+	end
+end

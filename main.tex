@@ -1,35 +1,94 @@
-\documentclass{article}
+\documentclass[conference]{IEEEtran}
 
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{titlesec}
 \usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{cleveref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subfigure}
+\usepackage{float}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+ 
+\lstset{style=mystyle}
 
 \inputencoding{utf8}
 \titleformat*{\section}{\large\bfseries}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\renewcommand{\lstlistingname}{Algoritmo}% Listing -> Algoritmo
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabla}
 
 \begin{document}
 
-\begin{center}
+\title{Tabu Search Applied in the Optimization in Static Regime for the Location of Police Resources in Asuncion, Paraguay}
 
-{\LARGE \textbf{Tabu Search applied in the optimization for the location of police resources in Paraguay}}\\
-\bigskip
-%List of Authors and Address
-{\large \textbf{Luis Alvarez\footnote{E-mail: \href{mailto:lalvarez.pol@gmail.com}{lalvarez.pol@gmail.com}}, Marco Alvarez\footnote{E-mail: \href{mailto:marcoalvarez@outlook.com}{marcoalvarez@outlook.com}}}\\Universidad Nacional de Asunción, Facultad Politécnica\\San Lorenzo, Paraguay}
-\end{center}
+\author{\IEEEauthorblockN{Luis Alberto Alvarez Penayo}
+\IEEEauthorblockA{\textit{Facultad Politécnica} \\
+\textit{Universidad Nacional de Asunción}\\
+San Lorenzo, Paraguay \\
+\href{mailto:lalvarez.pol@gmail.com}{lalvarez.pol@gmail.com}}
+\and
+\IEEEauthorblockN{Marco Antonio Alvarez Penayo}
+\IEEEauthorblockA{\textit{Facultad Politécnica} \\
+\textit{Universidad Nacional de Asunción}\\
+San Lorenzo, Paraguay \\
+\href{mailto:marcoalvarez@outlook.com}{marcoalvarez@outlook.com}}
+\and
+\IEEEauthorblockN{Diego Pedro Pinto Roa}
+\IEEEauthorblockA{\textit{Facultad Politécnica} \\
+\textit{Universidad Nacional de Asunción}\\
+San Lorenzo, Paraguay \\
+\href{mailto:dpinto@pol.una.py}{dpinto@pol.una.py}}
+}
+
+\maketitle
 
 \input{00-abstract}
 
 \input{01-introduction}
 
-\input{02-modeling}
+\input{02-problem.tex}
 
-\input{03-simulator}
+\input{03-actual-solution.tex}
 
-\input{04-performance-evaluation}
+\input{04-modeling.tex}
 
-\input{05-conclusion}
+\input{05-simulator.tex}
+
+\input{06-performance-evaluation.tex}
+
+\input{07-conclusion.tex}
 
 \bibliographystyle{bibliography/IEEEtran}
 \bibliography{bibliography/references}

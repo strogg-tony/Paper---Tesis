@@ -1,0 +1,15 @@
+\section{Descripción del Problema}
+En Paraguay, la Policía Nacional cuenta con jefaturas zonales y departamentales. Las jefaturas departamentales se subdividen en comisarías. La ciudad de Asunción cuenta con veinticuatro (24) comisarias; éstas tienen a su cargo cuatro o cinco cuadrantes, en los que operan uno o más vehículos con dos o tres policías y a su vez, cada cuadrante se subdivide en sectores. 
+
+El Centro de Atención de Emergencias del Sistema 911 actualmente funciona como un simple call center de recepción de llamadas, en donde se registran los datos preliminares del incidente y este luego es despachado a la  institución integrante del Sistema \cite{ley4739} dependiendo del tipo de incidente denunciado. En los incidentes concernientes a la seguridad ciudadana actúa la Policía Nacional que cuenta, en las oficinas del 911, con oficiales encargados de gestionar la asignación de los recursos Policiales en coordinación con las comisarias responsables de cubrir los cuadrantes y sectores donde ocurrió el incidente, así también se debe dar seguimiento y registro de las novedades del incidente, hasta su cierre.
+
+Son varios los problemas que actualmente enfrenta el Sistema 911 que impiden lograr un óptimo desempeño, tales como:
+\begin{itemize}
+\item Los recursos policiales que deben acudir a un llamado no siempre se encuentran disponibles, debido a que al ser dependientes de las comisarias cumplen también otras funciones de seguridad y no exclusivamente atención de emergencias, por tanto podrían inclusive darse casos donde al no disponer una comisaria de recursos para cubrir su cuadrante, esta deba solicitar apoyo a algún recurso disponible de alguna comisaria cercana.
+\item Incumplimiento del requisito mínimo de infraestructura, donde las telefonías tienen la obligación de facilitar la localización de la llamada a través de un sistema automático de identificación. Sin los datos exactos de ubicación del llamante se dificulta la tarea del operador de identificar exactamente el lugar del hecho, incurriendo en imprecisiones en las indicaciones.
+\item Los patrullajes realizados por los recursos para la mitigación de los hechos de inseguridad son realizados de forma aleatoria sin considerar ninguna base de información ni siguiendo algún procedimiento establecido para el efecto que permita medir los resultados y efectividad del procedimiento realizado. 
+\end{itemize}
+
+Estos y otros problemas inciden directamente en el tiempo de desplazamiento del recurso ante un incidente, siendo este tiempo mayor al 60\% del tiempo total requerido para atender efectivamente un llamado.
+
+Por ello este trabajo se centra en aplicar la Búsqueda Tabú como metodología científica que permita reducir el tiempo de desplazamiento. A su vez, nos permite obtener una optimización en cuanto a la asignación de los recursos disponibles considerando datos estadísticos que nos arrojan las zonas críticas a ser cubiertas. Como resultados del algoritmo podemos obtener una o varias combinaciones de posibilidades de cobertura que garanticen un tiempo de respuesta mínimo así como también un mayor grado de cobertura global.

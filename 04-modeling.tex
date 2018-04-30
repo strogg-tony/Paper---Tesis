@@ -1,0 +1,73 @@
+\section{Modelado}
+El modelado tratado más abajo está basado en el trabajo presentado en \cite{7359471}.
+
+El mapa fue modelado como un grafo conexo $G = (V, E)$ ponderado y direccionado, de forma que dos vértices (intersecciones de tramos) $v, w \in V$ que son adyacentes siempre están unidos por dos aristas $e_{1}, e_{2} \in E$ (tramos), una yendo de $v$ hacia $w$ y la otra realizando el sentido contrario. Cada tramo $r \in E$ posee un nivel de violencia $l_{r}$ y una longitud $d_{r}$ (distancia entre las intersecciones limitantes)\cite{van2010introduction}. A partir de la longitud es calculado el tiempo empleado por cada tipo de unidad en recorrerlo. Si los tramos son de sentido único, se considera un incremento del 50\% en el tiempo necesario para recorrerlo en el sentido contrario para todos los vehículos motorizados, buscando simular la dificultad de esos recursos para recorrer el tramo. Además, algunas aristas representan tramos que no pueden ser transitadas mediante el uso de vehículos motorizados. Para modelarlas, fue considerado que el tiempo necesario para recorrerlas es $-1$ (menos uno). Un oficial recorriendo a pie no posee tramos con tiempo $-1$.
+
+Además, se define un conjunto $U$ de recursos policiales disponibles. Cada recurso posee un tipo $i \in Q$ (tal que $Q$ es el conjunto de todos los tipos de recursos), que define las condiciones de movilidad de estas. Para cada uno de estos tipos es definido también una cantidad $U_{i}$ de recursos disponibles.
+
+Para decir que un recurso ubicado en una intersección $v$ elije un tramo $r$, es definido un tiempo límite $T_{max}$ para salir de $v$ y llegar a una de las intersecciones de $r$, considerando las correcciones de tiempos tales como las tratadas anteriormente.
+
+El nivel de violencia asociado a cada tramo $l_{r}$ es obtenido mediante el cálculo de la distribución de Poisson\cite{moreno1995manual} utilizando el histórico de los delitos. Como los delitos se encuentran asociados a las intersecciones, para obtener la cantidad de delitos por tramo se considera el promedio de los delitos en cada extremo.
+
+Para la construcción del modelo son utilizadas las siguientes variables de decisión:
+
+$x_{ij}$: Variable que indica la cantidad de recursos del tipo $i$ ubicadas en el vértice $j$.
+
+$a_{r}$: Variable binaria igual a $1$ si el tramo $r$ es cubierto por algún recurso policial dentro del tiempo $T_{max}$, y $0$ en caso contrario.
+
+$a'_{r}$: Similar a la anterior, pero con tiempo $2T_{max}$.
+
+$p_{rji}$: Variable binaria igual a $1$ si un recurso de tipo $i$ ubicado en $j$ logra cubrir el tramo $r$ en tiempo $T_{max}$, y $0$ en caso contrario.
+
+$p'_{rji}$: Similar a la anterior, pero con tiempo $2T_{max}$.
+
+$N$: Variable que indica la cantidad de tramos no alcanzables en un tiempo $2T_{max}$.
+
+$W$: Constante que almacena el mayor valor posible que toma la función objetivo sin penalización.
+
+Dicho modelo es mostrado a continuación:
+\begin{alignat}{2}
+    maxZ\label{eq:optimization-funtion}
+    &= \sum_{r \in E} l_{r}a_{r} - P(N)\\
+    P(N)\label{eq:penalization}
+    &= NW\\
+    \sum_{j \in V} x_{ij}\label{eq:total-resource}
+    &\leq U_{i}, 
+    &&\tab\forall i \in Q\\
+    a_{r}\label{eq:p-resource}
+    &\leq \sum_{i \in Q}\sum_{j \in V} p_{rij}x_{ij}, 
+    &&\tab\forall r \in E\\
+    a'_{r}\label{eq:pprime-resource}
+    &\leq \sum_{i \in Q}\sum_{j \in V} p'_{rij}x_{ij}, 
+    &&\tab\forall r \in E\\
+    \sum_{r \in E} a'_{r}\label{eq:all-edges}
+    &= |E|\\
+    x_{ij}\label{eq:xvariable}
+    &\in \mathbb{Z^{+}}, 
+    &&\tab\forall i \in U, \quad j \in V\\
+    a_{r}, a'_{r}\label{eq:binaries} 
+    &\in \{0,1\}, 
+    &&\tab\forall r \in E\\
+    N, W\label{eq:penal-variables} 
+    &\in \mathbb{Z^{+}}
+\end{alignat}
+
+En la función objetivo (\ref{eq:optimization-funtion}) se buscar maximizar el valor obtenido de la sumatoria del nivel de violencia de todos los tramos que son cubiertos (alcanzados en tiempo $T_{max}$) por al menos un recurso policial, disminuyendo el valor por una función de penalización. La función de penalización (\ref{eq:penalization}) está definida como la cantidad de tramos no cubiertos por algún recurso multiplicado por el máximo valor posible de la función objetivo. En la restricción (\ref{eq:total-resource}) es definido el número máximo de recursos de cada tipo que puede ser ubicado. Para la restricción (\ref{eq:p-resource}) el valor de la variable que define si un tramo es cubierto y definido a través de la verificación si existe algún recurso ubicado en un punto suficientemente próximo de este tramo. En (\ref{eq:pprime-resource}) es hecha básicamente la misma cosa, pero la distancia considerada es el doble. La restricción (\ref{eq:all-edges}), garantiza que todo tramo debe ser alcanzado por al menos un recurso policial en un tiempo máximo $2T_{max}$. Por ultimo, las restricciones (\ref{eq:xvariable}) y (\ref{eq:penal-variables}) indican la integridad de las variables $x_{ij}$, $N$ y $W$, y la restricción (\ref{eq:binaries}) indica que las variables $a_{r}$ y $a'_{r}$ son binarias.
+
+\subsection{Búsqueda Tabú}
+La Búsqueda Tabú es una meta-heurística basada en búsqueda local en donde algunas alteraciones en la cadena de respuesta son prohibidas de realizarse por un cierto número de iteraciones\cite{glover1989tabu}. Estas alteraciones prohibidas permanecen almacenadas en una estructura llamada lista tabú, de donde viene el nombre del algoritmo.
+
+Como parámetro de entrada el algoritmo requiere de una solución inicial, para obtener esta solución fue necesario calcular los valores de cobertura que definimos a continuación como:
+\begin{alignat}{2}
+    C_{ri}\label{eq:cobertura}
+    &= \sum_{r \in E} l_{r}a_{r} 
+    &&\tab\forall r \in E, \forall i \in Q
+\end{alignat}
+
+En base a (\ref{eq:cobertura}) decimos que, para cada arista del grafo y por cada tipo de recurso es calculado su área de cobertura a través de la suma de los niveles de violencia sin tener en cuenta si el tramo fue cubierto previamente por otro recurso.
+
+Una vez que se obtienen todos los valores de cobertura, se eligen aleatoriamente los vértices donde irán ubicados cada tipo de recursos (atendiendo que un recurso motorizado tenga al menos un tramo por donde movilizarse considerando la restricción de accesos).
+
+\lstinputlisting[language=Ruby,caption={Pseudo código de Búsqueda Tabú},label=alg:tabusearch]{tabu.code}
+
+La búsqueda fue definida como muestra el algoritmo \ref{alg:tabusearch}, primeramente se obtiene la solución inicial (línea 1) luego se inicializan las variables básicas (líneas 2 al 4). Ya en la búsqueda local, el proceso itera un máximo de veces definido por $4|U|$ (línea 5), donde un recurso es seleccionado aleatoriamente (línea 6) y se evalúa entre todos los vecinos de ese recurso cual de ellos es el que mejor ubicado, teniendo en cuenta la función objetivo así como también que no pertenezca a un vecino tabú (líneas 9 al 16). Luego de seleccionar el mejor vecino se comprueba si éste contribuye a mejorar la solución global (líneas 18 al 21). Por último, a cada $|U|$ iteraciones se realiza un proceso de intensificación de forma a generar soluciones más viables. Este proceso se rige de acuerdo a los pasos: (1) escoger un recurso sin restricción de acceso, (2) se coloca un recurso en un vértice de alguna arista no cubierta en tiempo $2T_{max}$, (3) la unidad con la mayor intersección en área de cobertura con la unidad reubicada (considerando la nueva posición) es llevada a la posición original de la unidad reubicada, (4) se hace una búsqueda local en 15 de los nodos cubiertos en tiempo $2T_{max}$ por la unidad reubicada en su nueva posición, para hacer un ajuste más fino de la nueva posición de esa unidad.
